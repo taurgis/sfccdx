@@ -5,6 +5,8 @@ Salesforce Commerce Cloud Developer Experience is a command line interface (CLI)
 
 The CLI can be used from any machine either locally or from build tools, like Jenkins, Travis CI, Bitbucket Pipelines, Heroku CI etc.
 
+Not sure where to start? Check out the [Getting Started]() section.
+
 # Required config files
 Two files need to be present in the project root.
 
