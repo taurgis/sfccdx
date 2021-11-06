@@ -127,10 +127,10 @@ Commands:
   attribute:get [options]                     Fetch all information about a given standard or custom attribute.
   attribute:delete [options]                  Delete a custom attribute on an object.
   attribute:push [options]                    Push a custom attribute to an object.
-  attributegroup:get [options]                Fetch all information about a given attribute group.
+  attributegroup:get [options]                Fetch all information about a given Attribute Group.
   attributegroup:delete [options]             Delete a Attribute Group from an object.
   attributegroup:push [options]               Push a Attribute Group to an object.
-  attributegroup:assignment:delete [options]  Delete a Attribute Group from an object.
+  attributegroup:assignment:delete [options]  Delete a Attribute Group assignment.
   help [command]                              display help for command
   ```
   
