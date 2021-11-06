@@ -123,11 +123,13 @@ Options:
 Commands:
   environment [options]       Attempts to read the current configuration either through the CLI, the dw.json & ocapi.json configuration file, or a
                               combination (overriding the JSON via the CLI)
-  verify [options]              Verifies the B2C Commerce environment by making an authorization call.
-  attribute:get [options]       Fetch all information about a given standard or custom attribute.
-  attribute:delete [options]    Delete a custom attribute on an object.
-  attribute:push [options]      Push a custom attribute to an object.
-  attributegroup:get [options]  Fetch all information about a given attribute group.
-  help [command]                display help for command
+  verify [options]                 Verifies the B2C Commerce environment by making an authorization call.
+  attribute:get [options]          Fetch all information about a given standard or custom attribute.
+  attribute:delete [options]       Delete a custom attribute on an object.
+  attribute:push [options]         Push a custom attribute to an object.
+  attributegroup:get [options]     Fetch all information about a given attribute group.
+  attributegroup:delete [options]  Delete a Attribute Group from an object.
+  attributegroup:push [options]    Push a Attribute Group to an object.
+  help [command]                   display help for command
   ```
   
