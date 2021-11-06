@@ -27,5 +27,6 @@ program = cliInterface.attributeDelete(program);
 program = cliInterface.attributePush(program);
 program = cliInterface.attributeGroupGet(program);
 program = cliInterface.attributeGroupDelete(program);
+program = cliInterface.attributeGroupPush(program);
 
 program.parse(process.argv);
