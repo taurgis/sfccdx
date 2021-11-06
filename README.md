@@ -11,7 +11,7 @@ Two files need to be present in the project root.
 ## dw.json
 The standard **dw.json** file is used to determine the hostname.
 
-```
+```json
 {
     "hostname": "devxx-eu01-project.demandware.net",
     "username": "user",
@@ -23,7 +23,7 @@ The standard **dw.json** file is used to determine the hostname.
 ## ocapi.json
 A second file named **ocapi.json** is used to determine the client ID and secret.
 
-```
+```json
 {
     "clientid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     "clientsecret": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -34,8 +34,11 @@ A second file named **ocapi.json** is used to determine the client ID and secret
 # Business Manager
 ## OCAPI Configuration (Data)
 Since we are making use of the OCAPI Data Resources, your configured Client ID needs access to these resources.
+<br/><br/>
+<details>
+<summary>View JSON example</summary>
 
-```
+```json
 {
 	"_v": "21.10",
 	"clients": [
@@ -110,10 +113,12 @@ Since we are making use of the OCAPI Data Resources, your configured Client ID n
 	]
 }
 ```
-
+</details>
+<br/><br/>
 
 # Using the Command Line Interface
-```
+
+```powershell
 Usage: sfccdx [options] [command]
 
 Options:
@@ -131,6 +136,6 @@ Commands:
   attributegroup:delete [options]             Delete a Attribute Group from an object.
   attributegroup:push [options]               Push a Attribute Group to an object.
   attributegroup:assignment:delete [options]  Delete a Attribute Group assignment.
-  help [command]                              display help for command
+  help [command]                              display help for command.
   ```
   
