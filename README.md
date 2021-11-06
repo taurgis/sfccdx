@@ -1,0 +1,133 @@
+
+# SFCCDX
+
+Salesforce Commerce Cloud Developer Experience is a command line interface (CLI) for Salesforce Commerce Cloud. It can be used to easily move metadata from and to your environment.
+
+The CLI can be used from any machine either locally or from build tools, like Jenkins, Travis CI, Bitbucket Pipelines, Heroku CI etc.
+
+# Required config files
+Two files need to be present in the project root.
+
+## dw.json
+The standard **dw.json** file is used to determine the hostname.
+
+```
+{
+    "hostname": "devxx-eu01-project.demandware.net",
+    "username": "user",
+    "password": "password"
+}
+
+```
+
+## ocapi.json
+A second file named **ocapi.json** is used to determine the client ID and secret.
+
+```
+{
+    "clientid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "clientsecret": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}
+
+```
+
+# Business Manager
+## OCAPI Configuration (Data)
+Since we are making use of the OCAPI Data Resources, your configured Client ID needs access to these resources.
+
+```
+{
+	"_v": "21.10",
+	"clients": [
+		{
+			"client_id": "<YOUR-CLIENT-ID-HERE>",
+			"resources": [
+				{
+					"resource_id": "/system_object_definitions",
+					"methods": [
+						"get"
+					],
+					"read_attributes": "(**)",
+					"write_attributes": "(**)"
+				},
+				{
+					"resource_id": "/system_object_definitions/*",
+					"methods": [
+						"get"
+					],
+					"read_attributes": "(**)",
+					"write_attributes": "(**)"
+				},
+				{
+					"resource_id": "/system_object_definitions/*/attribute_definitions",
+					"methods": [
+						"get"
+					],
+					"read_attributes": "(**)",
+					"write_attributes": "(**)"
+				},
+				{
+					"resource_id": "/system_object_definitions/*/attribute_definitions/*",
+					"methods": [
+						"delete",
+						"get",
+						"patch",
+						"put"
+					],
+					"read_attributes": "(**)",
+					"write_attributes": "(**)"
+				},
+				{
+					"resource_id": "/system_object_definitions/*/attribute_groups",
+					"methods": [
+						"get"
+					],
+					"read_attributes": "(**)",
+					"write_attributes": "(**)"
+				},
+				{
+					"resource_id": "/system_object_definitions/*/attribute_groups/*/attribute_definitions/*",
+					"methods": [
+						"delete",
+						"put"
+					],
+					"read_attributes": "(**)",
+					"write_attributes": "(**)"
+				},
+				{
+					"resource_id": "/system_object_definitions/*/attribute_groups/*",
+					"methods": [
+						"delete",
+						"get",
+						"patch",
+						"put"
+					],
+					"read_attributes": "(**)",
+					"write_attributes": "(**)"
+				}
+			]
+		}
+	]
+}
+```
+
+
+# Using the Command Line Interface
+```
+Usage: sfccdx [options] [command]
+
+Options:
+  -V, --version               output the version number
+  -h, --help                  display help for command
+
+Commands:
+  environment [options]       Attempts to read the current configuration either through the CLI, the dw.json & ocapi.json configuration file, or a
+                              combination (overriding the JSON via the CLI)
+  verify [options]              Verifies the B2C Commerce environment by making an authorization call.
+  attribute:get [options]       Fetch all information about a given standard or custom attribute.
+  attribute:delete [options]    Delete a custom attribute on an object.
+  attribute:push [options]      Push a custom attribute to an object.
+  attributegroup:get [options]  Fetch all information about a given attribute group.
+  help [command]                display help for command
+  ```
+  

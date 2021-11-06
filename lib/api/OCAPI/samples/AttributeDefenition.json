@@ -1,0 +1,23 @@
+{
+    "display_name": {
+        "default": "A new attribute"
+    },
+    "externally_defined": false,
+    "externally_managed": false,
+    "field_length": 1000,
+    "id": "changeMe",
+    "key": false,
+    "localizable": false,
+    "mandatory": false,
+    "min_length": 0,
+    "multi_value_type": false,
+    "order_required": false,
+    "queryable": true,
+    "read_only": false,
+    "requires_encoding": false,
+    "searchable": false,
+    "set_value_type": false,
+    "site_specific": false,
+    "value_type": "string",
+    "visible": false
+}
