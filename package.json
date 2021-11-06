@@ -1,7 +1,7 @@
 {
   "name": "@taurgis/sfccdx",
   "version": "0.2.2",
-  "description": "The Forward CLI is a command line interface (CLI) for Salesforce Commerce Cloud. It can be used to easily manage (meta)data (import/export) in relation to your project.",
+  "description": "SFCCDX is a command line interface (CLI) for Salesforce Commerce Cloud. It can be used to easily manage (meta)data (import/export) in relation to your project.",
   "main": "cli.js",
   "bin": {
     "sfccdx": "./cli.js"
