@@ -114,7 +114,7 @@ Since we are making use of the OCAPI Data Resources, your configured Client ID n
 }
 ```
 </details>
-<br/><br/>
+<br/>
 
 # Using the Command Line Interface
 
