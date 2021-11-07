@@ -1,4 +1,7 @@
 {
+    "description": {
+        "default": "A new attribute description."
+    },
     "display_name": {
         "default": "A new attribute"
     },
