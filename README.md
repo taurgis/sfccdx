@@ -1,5 +1,5 @@
 
-# SFCCDX
+# SFCCDX (Salesforce Commerce Cloud Developer Experience)
 
 Salesforce Commerce Cloud Developer Experience is a command line interface (CLI) for Salesforce Commerce Cloud. It can be used to easily move metadata from and to your environment.
 
