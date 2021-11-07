@@ -12,11 +12,7 @@
     "min_length": 0,
     "multi_value_type": false,
     "order_required": false,
-    "queryable": true,
-    "read_only": false,
-    "requires_encoding": false,
     "searchable": false,
-    "set_value_type": false,
     "site_specific": false,
     "value_type": "string",
     "visible": false
