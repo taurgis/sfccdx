@@ -7,6 +7,9 @@ The CLI can be used from any machine either locally or from build tools, like Je
 
 Not sure where to start? Check out the [Use Cases](https://github.com/taurgis/sfccdx/wiki/Use-Cases) section.
 
+# Known Limitations
+There are limitations to the OCAPI, and those that affect this tool have been documented [here](https://github.com/taurgis/sfccdx/wiki/Known-Limitations).
+
 # Required config files
 Two files need to be present in the project root.
 
