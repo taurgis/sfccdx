@@ -14,27 +14,18 @@ Want to help out? Checkout the [roadmap](https://github.com/taurgis/sfccdx/proje
 There are limitations to the OCAPI, and those that affect this tool have been documented [here](https://github.com/taurgis/sfccdx/wiki/Known-Limitations).
 
 # Required config files
-Two files need to be present in the project root.
+The dw.json file needs to be present in the project root.
 
 ## dw.json
 The standard **dw.json** file is used to determine the hostname.
 
 ```json
 {
-    "hostname": "devxx-eu01-project.demandware.net",
+    "hostname": "dev05-eu01-multipharma.demandware.net",
     "username": "user",
-    "password": "password"
-}
-
-```
-
-## ocapi.json
-A second file named **ocapi.json** is used to determine the client ID and secret.
-
-```json
-{
-    "clientid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    "clientsecret": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    "password": "password",
+    "client-id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "client-secret": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 }
 
 ```
