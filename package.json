@@ -7,7 +7,7 @@
     "sfccdx": "./cli.js"
   },
   "scripts": {
-    "test": "mocha test/**/*.js"
+    "test": "mocha test/unit --recursive"
   },
   "keywords": [
     "SFCC",
@@ -24,8 +24,8 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "chai": "^4.3.4",
-    "eslint": "^5.5.0",
-    "mocha": "^9.1.3",
+    "eslint": "^7.32.0",
+    "mocha": "^6.2.3",
     "proxyquire": "^2.1.3",
     "uri-js": "^4.4.1"
   },
