@@ -5,15 +5,10 @@ const fs = require('fs');
 const cwd = process.cwd();
 
 let pathToUse;
+let dwJSON = {};
 
 describe('Config', () => {
-    let config = proxyquire('../../../../lib/config', {
-        'path': {
-            join: () => {
-                return pathToUse;
-            }
-        }
-    });
+    let config;
 
     beforeEach(() => {
         pathToUse = path.join(cwd, 'dw.json');
@@ -21,6 +16,18 @@ describe('Config', () => {
 
     it('It should return a config with the default API Client/Secret if no dw.json is present.', () => {
         pathToUse = 'IDONTEXIST';
+
+        const proxyQuireStubs = {
+            'path': {
+                join: () => {
+                    return pathToUse;
+                }
+            }
+        };
+
+        config = proxyquire('../../../../lib/config', proxyQuireStubs);
+
+
         expect(config).to.deep.equal({
             'client-id': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
             'client-secret': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
@@ -28,7 +35,7 @@ describe('Config', () => {
     });
 
     it('It should return a config based on dw.json if it is present.', () => {
-        const exampleConfig ={
+        dwJSON = {
             hostname: 'devxx-eu01-project.demandware.net',
             username: 'user',
             password: 'password',
@@ -36,44 +43,42 @@ describe('Config', () => {
             'client-secret': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         };
 
-        if (fs.existsSync(pathToUse)) {
-            fs.copyFileSync(pathToUse, pathToUse + '.bak');
-        }
+        const proxyQuireStubs = {
+            'path': {
+                join: () => {
+                    return pathToUse;
+                }
+            }
+        };
 
-        fs.writeFileSync(pathToUse, JSON.stringify(exampleConfig));
+        proxyQuireStubs[pathToUse] = dwJSON;
 
-        config = require('../../../../lib/config');
+        config = proxyquire('../../../../lib/config', proxyQuireStubs);
 
-        if (fs.existsSync(pathToUse + '.bak')) {
-            fs.copyFileSync(pathToUse + '.bak', pathToUse);
-            fs.unlinkSync(pathToUse + '.bak');
-        }
-
-        expect(config).to.deep.equal(exampleConfig);
+        expect(config).to.deep.equal(dwJSON);
     });
 
     it('It should return a config with the fallback API data if it is not present in the dw.json.', () => {
-        const exampleConfig ={
+        dwJSON = {
             hostname: 'devxx-eu01-project.demandware.net',
             username: 'user',
             password: 'password',
         };
 
-        if (fs.existsSync(pathToUse)) {
-            fs.copyFileSync(pathToUse, pathToUse + '.bak');
-        }
+        const proxyQuireStubs = {
+            'path': {
+                join: () => {
+                    return pathToUse;
+                }
+            }
+        };
 
-        fs.writeFileSync(pathToUse, JSON.stringify(exampleConfig));
+        proxyQuireStubs[pathToUse] = dwJSON;
 
-        config = require('../../../../lib/config');
-
-        if (fs.existsSync(pathToUse + '.bak')) {
-            fs.copyFileSync(pathToUse + '.bak', pathToUse);
-            fs.unlinkSync(pathToUse + '.bak');
-        }
+        config = proxyquire('../../../../lib/config', proxyQuireStubs);
 
         expect(config).to.deep.equal({
-            ...exampleConfig,
+            ...dwJSON,
             'client-id': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
             'client-secret': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
         });
