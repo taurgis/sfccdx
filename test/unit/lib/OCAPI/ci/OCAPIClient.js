@@ -82,6 +82,11 @@ describe('OCAPIClient', () => {
     });
 
     describe('initializeRequestDefinition', () => {
+
+        beforeEach(() => {
+            tokenMock = 'sHLuOUiYpU4TwvZKhOb9AHfyGRc';
+        });
+
         it('Should return the request definition', async () => {
             const client = new OCAPIClient(config);
             const requestDefinition = await client.initializeRequestDefinition('/test');
