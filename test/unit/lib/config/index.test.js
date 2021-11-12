@@ -14,7 +14,7 @@ describe('Config', () => {
         pathToUse = path.join(cwd, 'dw.json');
     });
 
-    it('It should return a config with the default API Client/Secret if no dw.json is present.', () => {
+    it('Should return a config with the default API Client/Secret if no dw.json is present.', () => {
         pathToUse = 'IDONTEXIST';
 
         const proxyQuireStubs = {
@@ -34,7 +34,7 @@ describe('Config', () => {
         });
     });
 
-    it('It should return a config based on dw.json if it is present.', () => {
+    it('Should return a config based on dw.json if it is present.', () => {
         dwJSON = {
             hostname: 'devxx-eu01-project.demandware.net',
             username: 'user',
@@ -58,7 +58,7 @@ describe('Config', () => {
         expect(config).to.deep.equal(dwJSON);
     });
 
-    it('It should return a config with the fallback API data if it is not present in the dw.json.', () => {
+    it('Should return a config with the fallback API data if it is not present in the dw.json.', () => {
         dwJSON = {
             hostname: 'devxx-eu01-project.demandware.net',
             username: 'user',

@@ -22,13 +22,13 @@ const OCAPIClient = proxyquire('../../../../lib/api/OCAPI/OCAPIClient', {
 
 describe('OCAPIClient', () => {
     describe ('Constructor', () => {
-        it('should create a new OCAPIClient', () => {
+        it('Should create a new OCAPIClient', () => {
             const client = new OCAPIClient(config);
 
             expect(client).to.be.an.instanceof(OCAPIClient);
         });
 
-        it('should throw an exception if no configuration is passed', () => {
+        it('Should throw an exception if no configuration is passed', () => {
             try {
                 const client = new OCAPIClient();
                 expect(true).to.be.false;
@@ -37,19 +37,19 @@ describe('OCAPIClient', () => {
             }
         });
 
-        it('should store the passed config', () => {
+        it('Should store the passed config', () => {
             const client = new OCAPIClient(config);
 
             expect(client.config).to.deep.equal(config);
         });
 
-        it('should set a base path', () => {
+        it('Should set a base path', () => {
             const client = new OCAPIClient(config);
 
             expect(client.basePath).to.deep.equal('/');
         });
 
-        it('should initialize the client', () => {
+        it('Should initialize the client', () => {
             const client = new OCAPIClient(config);
 
             expect(client.requestInstance).to.not.be.null;
