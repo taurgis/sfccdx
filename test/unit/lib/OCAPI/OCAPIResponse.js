@@ -67,5 +67,13 @@ describe('OCAPIResponse', () => {
 
             expect(response.getFaultMessage()).to.equal('No Fault Message.');
         });
+
+        it('Should return a fallback message if the status is not 200 and no fault message is present', () => {  
+            const response = new OCAPIResponse({
+                status: 500
+            });
+
+            expect(response.getFaultMessage()).to.equal('No Fault Message.');
+        });
     });
 });
