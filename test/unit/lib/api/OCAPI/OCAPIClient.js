@@ -10,7 +10,7 @@ const config = {
     clientsecret: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 };
 
-const OCAPIClient = proxyquire('../../../../lib/api/OCAPI/OCAPIClient', {
+const OCAPIClient = proxyquire('../../../../../lib/api/OCAPI/OCAPIClient', {
     "sfcc-ci": {
         auth: {
             auth: function (clientId, clientSecret, callback) {

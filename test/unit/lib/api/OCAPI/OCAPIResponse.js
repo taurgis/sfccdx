@@ -1,5 +1,5 @@
 const expect = require('chai').expect;
-const OCAPIResponse = require('../../../../lib/api/OCAPI/OCAPIResponse');
+const OCAPIResponse = require('../../../../../lib/api/OCAPI/OCAPIResponse');
 
 describe('OCAPIResponse', () => {
     describe ('Constructor', () => {
@@ -68,7 +68,7 @@ describe('OCAPIResponse', () => {
             expect(response.getFaultMessage()).to.equal('No Fault Message.');
         });
 
-        it('Should return a fallback message if the status is not 200 and no fault message is present', () => {  
+        it('Should return a fallback message if the status is not 200 and no fault message is present', () => {
             const response = new OCAPIResponse({
                 status: 500
             });

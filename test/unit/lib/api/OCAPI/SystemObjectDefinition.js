@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
-const SystemObjectDefinition = require('../../../../lib/api/OCAPI/SystemObjectDefinition');
-const OCAPIClient = require('../../../../lib/api/OCAPI/OCAPIClient');
+const SystemObjectDefinition = require('../../../../../lib/api/OCAPI/SystemObjectDefinition');
+const OCAPIClient = require('../../../../../lib/api/OCAPI/OCAPIClient');
 
 describe('OCAPI: SystemObjectDefinition', () => {
     let systemObjectDefinition;
