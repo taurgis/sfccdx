@@ -71,5 +71,17 @@ describe('attribute-get', () => {
 
             expect(outputCommandBookEndSpy.calledTwice).to.be.true;
         });
+
+        it('Should output debug information if the option is set to true', async () => {
+            await attributeGet({
+                object: 'object',
+                attribute: 'attribute',
+                debug: true
+            });
+
+            expect(outputFieldsSpy.calledOnce).to.be.true;
+            expect(outputSuccessSpy.calledOnce).to.be.true;
+            expect(outputCommandBookEndSpy.calledTwice).to.be.true;
+        });
     });
 });
