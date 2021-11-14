@@ -103,12 +103,9 @@ describe('OCAPIClient', () => {
         });
 
         it('Should throw an error if no endpoint is provided', () => {
-            try {
-                new OCAPIClient(config).initializeRequestDefinition();
-                expect(true).to.be.false;
-            } catch (e) {
-                // Do nothing
-            }
+            return new OCAPIClient(config).initializeRequestDefinition().catch(error => {
+                expect(error.message).to.equal('No endpoint provided');
+            });
         })
     });
 });

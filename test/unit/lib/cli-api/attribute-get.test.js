@@ -5,11 +5,30 @@ const sinon = require('sinon');
 const path = require('path');
 
 
-const dummyAttribute = {
-    'name': 'attribute',
-    'type': 'string',
-    'value': 'value',
-};
+const attributes = {
+    attribute: {
+        'id': 'attribute',
+        'value_type': 'string',
+        'system': false,
+    },
+    attribute2: {
+        'id': 'attribute2',
+        'value_type': 'string',
+        'system': false,
+    },
+    systemAttribute: {
+        'id': 'attribute_sytem',
+        'value_type': 'string',
+        'system': true,
+    }
+}
+
+
+const dummyObject = {
+    data: [
+        attributes.attribute, attributes.attribute2, attributes.systemAttribute,
+    ]
+}
 
 const writeFileSpy = sinon.spy();
 const outputFieldsSpy = sinon.spy();
@@ -41,9 +60,18 @@ describe('attribute-get', () => {
         outputSuccessSpy.resetHistory();
         outputCommandBookEndSpy.resetHistory();
 
-        sinon.stub(SystemObjectDefinition.prototype, 'getSingleObjectAttributeDefinition').resolves({
+        sinon.stub(SystemObjectDefinition.prototype, 'getSingleObjectAttributeDefinition').callsFake((object, attribute) => {
+            return new Promise((resolve, reject) => {
+                resolve({
+                    isSuccess: () => true,
+                    data: attributes[attribute]
+                });
+            });
+        });
+
+        sinon.stub(SystemObjectDefinition.prototype, 'getObjectAttributeDefinitions').resolves({
             isSuccess: () => true,
-            data: dummyAttribute
+            data: dummyObject
         });
     });
 
@@ -60,7 +88,7 @@ describe('attribute-get', () => {
 
             expect(writeFileSpy.calledOnce).to.be.true;
             expect(writeFileSpy.firstCall.args[0]).to.contain('attribute.json');
-            expect(writeFileSpy.firstCall.args[1]).to.equal(JSON.stringify(dummyAttribute, null, 4));
+            expect(writeFileSpy.firstCall.args[1]).to.equal(JSON.stringify(attributes.attribute, null, 4));
 
             // Output
             expect(outputFieldsSpy.called).to.be.false;
@@ -100,6 +128,28 @@ describe('attribute-get', () => {
             expect(outputErrorSpy.firstCall.args[0]).to.equal('Error');
             expect(outputFieldsSpy.called).to.be.false;
             expect(outputSuccessSpy.called).to.be.false;
+            expect(outputCommandBookEndSpy.calledTwice).to.be.true;
+        });
+    });
+
+    describe('All Attribute ', () => {
+        it('Should save all attributes when only an object is passed', async () => {
+            await attributeGet({
+                object: 'object'
+            });
+
+            expect(writeFileSpy.calledTwice).to.be.true;
+            expect(writeFileSpy.firstCall.args[0]).to.contain('attribute.json');
+            expect(writeFileSpy.secondCall.args[0]).to.contain('attribute2.json');
+            expect(writeFileSpy.firstCall.args[1]).to.equal(JSON.stringify(attributes.attribute, null, 4));
+            expect(writeFileSpy.secondCall.args[1]).to.equal(JSON.stringify(attributes.attribute2, null, 4));
+
+            // Output
+            expect(outputFieldsSpy.called).to.be.false;
+            expect(outputSuccessSpy.calledTwice).to.be.true;
+            expect(outputSuccessSpy.firstCall.args[0]).to.contain('object/attribute');
+            expect(outputSuccessSpy.secondCall.args[0]).to.contain('object/attribute2');
+
             expect(outputCommandBookEndSpy.calledTwice).to.be.true;
         });
     });
