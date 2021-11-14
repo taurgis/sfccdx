@@ -87,7 +87,7 @@ describe('attribute-get', () => {
             });
 
             expect(writeFileSpy.calledOnce).to.be.true;
-            expect(writeFileSpy.firstCall.args[0]).to.contain('attribute.json');
+            expect(writeFileSpy.firstCall.args[0]).to.contain(path.join('object','attribute.json'));
             expect(writeFileSpy.firstCall.args[1]).to.equal(JSON.stringify(attributes.attribute, null, 4));
 
             // Output
@@ -139,8 +139,8 @@ describe('attribute-get', () => {
             });
 
             expect(writeFileSpy.calledTwice).to.be.true;
-            expect(writeFileSpy.firstCall.args[0]).to.contain('attribute.json');
-            expect(writeFileSpy.secondCall.args[0]).to.contain('attribute2.json');
+            expect(writeFileSpy.firstCall.args[0]).to.contain(path.join('object','attribute.json'));
+            expect(writeFileSpy.secondCall.args[0]).to.contain(path.join('object', 'attribute2.json'));
             expect(writeFileSpy.firstCall.args[1]).to.equal(JSON.stringify(attributes.attribute, null, 4));
             expect(writeFileSpy.secondCall.args[1]).to.equal(JSON.stringify(attributes.attribute2, null, 4));
 
