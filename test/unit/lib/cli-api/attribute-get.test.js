@@ -1,5 +1,6 @@
 const proxyquire = require('proxyquire').noCallThru();
 const SystemObjectDefinition = require('../../../../lib/api/OCAPI/SystemObjectDefinition');
+const { cleanOCAPIResponse } = require('../../../../lib/util/OCAPICleaner');
 const { expect } = require('chai');
 const sinon = require('sinon');
 const path = require('path');
@@ -16,17 +17,17 @@ const attributes = {
         'value_type': 'string',
         'system': false,
     },
-    systemAttribute: {
-        'id': 'attribute_sytem',
+    systemattribute: {
+        'id': 'systemattribute',
         'value_type': 'string',
         'system': true,
     }
 }
 
 
-const dummyObject = {
+let dummyObject = {
     data: [
-        attributes.attribute, attributes.attribute2, attributes.systemAttribute,
+        attributes.attribute, attributes.attribute2, attributes.systemattribute,
     ]
 }
 
@@ -88,7 +89,7 @@ describe('attribute-get', () => {
 
             expect(writeFileSpy.calledOnce).to.be.true;
             expect(writeFileSpy.firstCall.args[0]).to.contain(path.join('object','attribute.json'));
-            expect(writeFileSpy.firstCall.args[1]).to.equal(JSON.stringify(attributes.attribute, null, 4));
+            expect(writeFileSpy.firstCall.args[1]).to.equal(JSON.stringify(cleanOCAPIResponse(attributes.attribute), null, 4));
 
             // Output
             expect(outputFieldsSpy.called).to.be.false;
@@ -141,8 +142,60 @@ describe('attribute-get', () => {
             expect(writeFileSpy.calledTwice).to.be.true;
             expect(writeFileSpy.firstCall.args[0]).to.contain(path.join('object','attribute.json'));
             expect(writeFileSpy.secondCall.args[0]).to.contain(path.join('object', 'attribute2.json'));
-            expect(writeFileSpy.firstCall.args[1]).to.equal(JSON.stringify(attributes.attribute, null, 4));
-            expect(writeFileSpy.secondCall.args[1]).to.equal(JSON.stringify(attributes.attribute2, null, 4));
+            expect(writeFileSpy.firstCall.args[1]).to.equal(JSON.stringify(cleanOCAPIResponse(attributes.attribute), null, 4));
+            expect(writeFileSpy.secondCall.args[1]).to.equal(JSON.stringify(cleanOCAPIResponse(attributes.attribute2), null, 4));
+
+            // Output
+            expect(outputFieldsSpy.called).to.be.false;
+            expect(outputSuccessSpy.calledTwice).to.be.true;
+            expect(outputSuccessSpy.firstCall.args[0]).to.contain('object/attribute');
+            expect(outputSuccessSpy.secondCall.args[0]).to.contain('object/attribute2');
+
+            expect(outputCommandBookEndSpy.calledTwice).to.be.true;
+        });
+
+        it('Should include system attributes when the option is enabled', async () => {
+            await attributeGet({
+                object: 'object',
+                includeSystemAttributes: true
+            });
+
+            expect(writeFileSpy.calledThrice).to.be.true;
+            expect(writeFileSpy.firstCall.args[0]).to.contain(path.join('object','attribute.json'));
+            expect(writeFileSpy.secondCall.args[0]).to.contain(path.join('object', 'attribute2.json'));
+            expect(writeFileSpy.thirdCall.args[0]).to.contain(path.join('object', 'systemattribute.json'));
+            expect(writeFileSpy.firstCall.args[1]).to.equal(JSON.stringify(cleanOCAPIResponse(attributes.attribute), null, 4));
+            expect(writeFileSpy.secondCall.args[1]).to.equal(JSON.stringify(cleanOCAPIResponse(attributes.attribute2), null, 4));
+            expect(writeFileSpy.thirdCall.args[1]).to.equal(JSON.stringify(cleanOCAPIResponse(attributes.systemattribute), null, 4));
+
+            // Output
+            expect(outputFieldsSpy.called).to.be.false;
+            expect(outputSuccessSpy.calledThrice).to.be.true;
+            expect(outputSuccessSpy.firstCall.args[0]).to.contain('object/attribute');
+            expect(outputSuccessSpy.secondCall.args[0]).to.contain('object/attribute2');
+            expect(outputSuccessSpy.thirdCall.args[0]).to.contain('object/systemattribute');
+
+            expect(outputCommandBookEndSpy.calledTwice).to.be.true;
+        });
+
+        it('Should output debug information if the option is set to true', async () => {
+            await attributeGet({
+                object: 'object',
+                debug: true,
+            });
+
+            expect(outputFieldsSpy.calledTwice).to.be.true;
+            expect(outputSuccessSpy.calledTwice).to.be.true;
+            expect(outputCommandBookEndSpy.calledTwice).to.be.true;
+        });
+
+        it('Should not save attributes when the option is set to false', async () => {
+            await attributeGet({
+                object: 'object',
+                doNotSave: true,
+            });
+
+            expect(writeFileSpy.called).to.be.false;
 
             // Output
             expect(outputFieldsSpy.called).to.be.false;
