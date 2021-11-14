@@ -31,6 +31,14 @@ let dummyObject = {
     ]
 }
 
+let dummyObjects = {
+    data: [{
+        object_type: 'object1'
+    }, {
+        object_type: 'object2'
+    }]
+};
+
 const writeFileSpy = sinon.spy();
 const outputFieldsSpy = sinon.spy();
 const outputSuccessSpy = sinon.spy();
@@ -73,6 +81,11 @@ describe('attribute-get', () => {
         sinon.stub(SystemObjectDefinition.prototype, 'getObjectAttributeDefinitions').resolves({
             isSuccess: () => true,
             data: dummyObject
+        });
+
+        sinon.stub(SystemObjectDefinition.prototype, 'getSystemObjectDefinitions').resolves({
+            isSuccess: () => true,
+            data: dummyObjects
         });
     });
 
@@ -133,7 +146,7 @@ describe('attribute-get', () => {
         });
     });
 
-    describe('All Attribute ', () => {
+    describe('All Attributes of a single object', () => {
         it('Should save all attributes when only an object is passed', async () => {
             await attributeGet({
                 object: 'object'
@@ -202,6 +215,40 @@ describe('attribute-get', () => {
             expect(outputSuccessSpy.calledTwice).to.be.true;
             expect(outputSuccessSpy.firstCall.args[0]).to.contain('object/attribute');
             expect(outputSuccessSpy.secondCall.args[0]).to.contain('object/attribute2');
+
+            expect(outputCommandBookEndSpy.calledTwice).to.be.true;
+        });
+    });
+
+    describe('All Attributes of all objects', () => {
+        it('Should save all attributes of all objects if no parameters are passed', async () => {
+            await attributeGet({});
+
+            expect(writeFileSpy.callCount).to.equal(4);
+
+            // First Object
+            expect(writeFileSpy.firstCall.args[0]).to.contain(path.join('object1','attribute.json'));
+            expect(writeFileSpy.secondCall.args[0]).to.contain(path.join('object1', 'attribute2.json'));
+            expect(writeFileSpy.firstCall.args[1]).to.equal(JSON.stringify(cleanOCAPIResponse(attributes.attribute), null, 4));
+            expect(writeFileSpy.secondCall.args[1]).to.equal(JSON.stringify(cleanOCAPIResponse(attributes.attribute2), null, 4));
+
+            // Second Object
+            expect(writeFileSpy.thirdCall.args[0]).to.contain(path.join('object2','attribute.json'));
+            expect(writeFileSpy.getCall(3).args[0]).to.contain(path.join('object2', 'attribute2.json'));
+            expect(writeFileSpy.thirdCall.args[1]).to.equal(JSON.stringify(cleanOCAPIResponse(attributes.attribute), null, 4));
+            expect(writeFileSpy.getCall(3).args[1]).to.equal(JSON.stringify(cleanOCAPIResponse(attributes.attribute2), null, 4));
+
+            // Output
+            expect(outputFieldsSpy.called).to.be.false;
+            expect(outputSuccessSpy.callCount).to.equal(4);
+
+            // First Object
+            expect(outputSuccessSpy.firstCall.args[0]).to.contain('object1/attribute');
+            expect(outputSuccessSpy.secondCall.args[0]).to.contain('object1/attribute2');
+
+            // Second Object
+            expect(outputSuccessSpy.thirdCall.args[0]).to.contain('object2/attribute');
+            expect(outputSuccessSpy.getCall(3).args[0]).to.contain('object2/attribute2');
 
             expect(outputCommandBookEndSpy.calledTwice).to.be.true;
         });
