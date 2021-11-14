@@ -1,6 +1,9 @@
 const proxyquire = require('proxyquire').noCallThru();
-const { assert, expect } = require('chai');
+const SystemObjectDefinition = require('../../../../lib/api/OCAPI/SystemObjectDefinition');
+const { expect } = require('chai');
 const sinon = require('sinon');
+const path = require('path');
+
 
 const dummyAttribute = {
     'name': 'attribute',
@@ -11,32 +14,18 @@ const dummyAttribute = {
 const writeFileSpy = sinon.spy();
 const outputFieldsSpy = sinon.spy();
 const outputSuccessSpy = sinon.spy();
+const outputErrorSpy = sinon.spy();
 const outputCommandBookEndSpy = sinon.spy();
 
 const attributeGet = proxyquire('../../../../lib/cli-api/attribute-get', {
     '../cli-interface/ui': {
         outputFields: outputFieldsSpy,
         outputSuccess: outputSuccessSpy,
-        outputError: (error) => {
-            throw new Error(error);
-        },
+        outputError: outputErrorSpy,
         cliCommandBookend :outputCommandBookEndSpy
     },
     '../api/OCAPI': {
-        SystemObjectDefinition: class SystemObjectDefinition {
-            async getSingleObjectAttributeDefinition (object, attribute) {
-                return new Promise((resolve, reject) => {
-                    if (object && attribute) {
-                        resolve({
-                            isSuccess: () => true,
-                            data: dummyAttribute
-                        });
-                    } else {
-                        reject(new Error('Invalid object or attribute'));
-                    }
-                });
-            }
-        }
+        SystemObjectDefinition: SystemObjectDefinition
     },
     'fs': {
         existsSync: () => true,
@@ -51,6 +40,15 @@ describe('attribute-get', () => {
         outputFieldsSpy.resetHistory();
         outputSuccessSpy.resetHistory();
         outputCommandBookEndSpy.resetHistory();
+
+        sinon.stub(SystemObjectDefinition.prototype, 'getSingleObjectAttributeDefinition').resolves({
+            isSuccess: () => true,
+            data: dummyAttribute
+        });
+    });
+
+    afterEach(() => {
+        sinon.restore();
     });
 
     describe('Single Attribute', () => {
@@ -81,6 +79,27 @@ describe('attribute-get', () => {
 
             expect(outputFieldsSpy.calledOnce).to.be.true;
             expect(outputSuccessSpy.calledOnce).to.be.true;
+            expect(outputCommandBookEndSpy.calledTwice).to.be.true;
+        });
+
+        it('Should output an error if we get an error response from the OCAPI', async () => {
+            sinon.restore();
+
+            sinon.stub(SystemObjectDefinition.prototype, 'getSingleObjectAttributeDefinition').resolves({
+                isSuccess: () => false,
+                getFaultMessage: () => 'Error'
+            });
+
+            await attributeGet({
+                object: 'object',
+                attribute: 'attribute',
+                debug: true
+            });
+
+            expect(outputErrorSpy.calledOnce).to.be.true;
+            expect(outputErrorSpy.firstCall.args[0]).to.equal('Error');
+            expect(outputFieldsSpy.called).to.be.false;
+            expect(outputSuccessSpy.called).to.be.false;
             expect(outputCommandBookEndSpy.calledTwice).to.be.true;
         });
     });
