@@ -2,6 +2,7 @@ const proxyquire = require('proxyquire').noCallThru();
 const SystemObjectDefinition = require('../../../../lib/api/OCAPI/SystemObjectDefinition');
 const { expect } = require('chai');
 const sinon = require('sinon');
+const path = require('path');
 
 const unlinkSpy = sinon.spy();
 const outputFieldsSpy = sinon.spy();
@@ -28,25 +29,20 @@ const attributeDelete = proxyquire('../../../../lib/cli-api/attribute-delete', {
 describe('attribute-delete', () => {
 
     beforeEach(() => {
+        unlinkSpy.resetHistory();
         outputFieldsSpy.resetHistory();
         outputSuccessSpy.resetHistory();
         outputErrorSpy.resetHistory();
         outputCommandBookEndSpy.resetHistory();
-        unlinkSpy.resetHistory();
 
-        sinon.stub(SystemObjectDefinition.prototype, 'deleteSingleObjectAttributeDefinition').callsFake((object, attribute) => {
-            return new Promise((resolve, reject) => {
-                resolve({
-                    isSuccess: () => true
-                });
-            });
+        sinon.stub(SystemObjectDefinition.prototype, 'deleteSingleObjectAttributeDefinition').resolves({
+            isSuccess: () => true
         });
     });
 
     afterEach(() => {
         sinon.restore();
     });
-
 
     it('Should delete an attribute when an object and attribute are passed', async () => {
         await attributeDelete({
@@ -61,6 +57,8 @@ describe('attribute-delete', () => {
 
         // Should have deleted the associated file
         expect(unlinkSpy.calledOnce).to.be.true;
+        expect(unlinkSpy.firstCall.args[0]).to.contain(path.join('object','attribute.json'));
+
     });
 
     it('Should keep the associated file when the "preserveFile" flag is passed', async () => {

@@ -64,10 +64,11 @@ const attributeGet = proxyquire('../../../../lib/cli-api/attribute-get', {
 describe('attribute-get', () => {
 
     beforeEach(() => {
-        writeFileSpy.resetHistory();
         outputFieldsSpy.resetHistory();
         outputSuccessSpy.resetHistory();
+        outputErrorSpy.resetHistory();
         outputCommandBookEndSpy.resetHistory();
+        writeFileSpy.resetHistory();
 
         sinon.stub(SystemObjectDefinition.prototype, 'getSingleObjectAttributeDefinition').callsFake((object, attribute) => {
             return new Promise((resolve, reject) => {
