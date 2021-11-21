@@ -12,6 +12,10 @@ const outputErrorSpy = sinon.spy();
 const outputCommandBookEndSpy = sinon.spy();
 let fileExistsStub = sinon.stub();
 
+let getSingleAttributeOCAPICallStub;
+let updateSingleAttributeOCAPICallStub;
+let createSingleAttributeOCAPICallStub;
+
 const attributePush = proxyquire('../../../../lib/cli-api/attribute-push', {
     '../cli-interface/ui': {
         outputFields: outputFieldsSpy,
@@ -42,18 +46,18 @@ describe('attribute-push', () => {
         outputErrorSpy.resetHistory();
         outputCommandBookEndSpy.resetHistory();
 
-        sinon.stub(SystemObjectDefinition.prototype, 'getSingleObjectAttributeDefinition').resolves({
+        getSingleAttributeOCAPICallStub = sinon.stub(SystemObjectDefinition.prototype, 'getSingleObjectAttributeDefinition').resolves({
             isSuccess: () => true,
             data: {
                 _resource_state: 'STATE_ID'
             }
         });
 
-        sinon.stub(SystemObjectDefinition.prototype, 'updateSingleObjectAttributeDefinition').resolves({
+        updateSingleAttributeOCAPICallStub = sinon.stub(SystemObjectDefinition.prototype, 'updateSingleObjectAttributeDefinition').resolves({
             isSuccess: () => true
         });
 
-        sinon.stub(SystemObjectDefinition.prototype, 'createSingleObjectAttributeDefinition').resolves({
+        createSingleAttributeOCAPICallStub = sinon.stub(SystemObjectDefinition.prototype, 'createSingleObjectAttributeDefinition').resolves({
             isSuccess: () => true
         });
     });
@@ -79,6 +83,10 @@ describe('attribute-push', () => {
         expect(readFileSpy.firstCall.args[0]).to.contain(path.join('object','attribute.json'));
 
         expect(writeFileSpy.called).to.be.false;
+
+        // OCAPI Calls
+        expect(getSingleAttributeOCAPICallStub.calledOnce).to.be.true;
+        expect(updateSingleAttributeOCAPICallStub.calledOnce).to.be.true;
     });
 
     it('should create a template file if the attribute file does not exist yet for the given parameters', async () => {
@@ -97,6 +105,10 @@ describe('attribute-push', () => {
 
         expect(writeFileSpy.called).to.be.true;
         expect(writeFileSpy.firstCall.args[0]).to.contain(path.join('object','attribute.json'));
+
+        // OCAPI Calls
+        expect(getSingleAttributeOCAPICallStub.calledOnce).to.be.true;
+        expect(updateSingleAttributeOCAPICallStub.notCalled).to.be.true;
     });
 
     it('should print debug information when the debug flag is passed', async () => {
@@ -131,5 +143,10 @@ describe('attribute-push', () => {
         expect(outputCommandBookEndSpy.calledTwice).to.be.true;
         expect(readFileSpy.called).to.be.true;
         expect(writeFileSpy.called).to.be.false;
+
+        // OCAPI Calls
+        expect(getSingleAttributeOCAPICallStub.calledOnce).to.be.true;
+        expect(updateSingleAttributeOCAPICallStub.notCalled).to.be.true;
+        expect(createSingleAttributeOCAPICallStub.calledOnce).to.be.true;
     });
 });

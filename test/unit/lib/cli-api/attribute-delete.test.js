@@ -10,6 +10,8 @@ const outputSuccessSpy = sinon.spy();
 const outputErrorSpy = sinon.spy();
 const outputCommandBookEndSpy = sinon.spy();
 
+let deleteOCAPICallStub;
+
 const attributeDelete = proxyquire('../../../../lib/cli-api/attribute-delete', {
     '../cli-interface/ui': {
         outputFields: outputFieldsSpy,
@@ -35,7 +37,7 @@ describe('attribute-delete', () => {
         outputErrorSpy.resetHistory();
         outputCommandBookEndSpy.resetHistory();
 
-        sinon.stub(SystemObjectDefinition.prototype, 'deleteSingleObjectAttributeDefinition').resolves({
+        deleteOCAPICallStub = sinon.stub(SystemObjectDefinition.prototype, 'deleteSingleObjectAttributeDefinition').resolves({
             isSuccess: () => true
         });
     });
@@ -59,6 +61,8 @@ describe('attribute-delete', () => {
         expect(unlinkSpy.calledOnce).to.be.true;
         expect(unlinkSpy.firstCall.args[0]).to.contain(path.join('object','attribute.json'));
 
+        // Should have called the API
+        expect(deleteOCAPICallStub.calledOnce).to.be.true;
     });
 
     it('Should keep the associated file when the "preserveFile" flag is passed', async () => {

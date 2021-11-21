@@ -45,6 +45,10 @@ const outputSuccessSpy = sinon.spy();
 const outputErrorSpy = sinon.spy();
 const outputCommandBookEndSpy = sinon.spy();
 
+let getSingleAttributeOCAPICallStub;
+let getObjectAttributesOCAPICallStub;
+let getObjectTypesOCAPICallStub;
+
 const attributeGet = proxyquire('../../../../lib/cli-api/attribute-get', {
     '../cli-interface/ui': {
         outputFields: outputFieldsSpy,
@@ -70,7 +74,7 @@ describe('attribute-get', () => {
         outputCommandBookEndSpy.resetHistory();
         writeFileSpy.resetHistory();
 
-        sinon.stub(SystemObjectDefinition.prototype, 'getSingleObjectAttributeDefinition').callsFake((object, attribute) => {
+        getSingleAttributeOCAPICallStub = sinon.stub(SystemObjectDefinition.prototype, 'getSingleObjectAttributeDefinition').callsFake((object, attribute) => {
             return new Promise((resolve, reject) => {
                 resolve({
                     isSuccess: () => true,
@@ -79,12 +83,12 @@ describe('attribute-get', () => {
             });
         });
 
-        sinon.stub(SystemObjectDefinition.prototype, 'getObjectAttributeDefinitions').resolves({
+        getObjectAttributesOCAPICallStub = sinon.stub(SystemObjectDefinition.prototype, 'getObjectAttributeDefinitions').resolves({
             isSuccess: () => true,
             data: dummyObject
         });
 
-        sinon.stub(SystemObjectDefinition.prototype, 'getSystemObjectDefinitions').resolves({
+        getObjectTypesOCAPICallStub = sinon.stub(SystemObjectDefinition.prototype, 'getSystemObjectDefinitions').resolves({
             isSuccess: () => true,
             data: dummyObjects
         });
@@ -111,6 +115,9 @@ describe('attribute-get', () => {
             expect(outputSuccessSpy.firstCall.args[0]).to.contain('object/attribute');
 
             expect(outputCommandBookEndSpy.calledTwice).to.be.true;
+
+            // Should call the OCAPI
+            expect(getSingleAttributeOCAPICallStub.calledOnce).to.be.true;
         });
 
         it('Should output debug information if the option is set to true', async () => {
@@ -166,6 +173,10 @@ describe('attribute-get', () => {
             expect(outputSuccessSpy.secondCall.args[0]).to.contain('object/attribute2');
 
             expect(outputCommandBookEndSpy.calledTwice).to.be.true;
+
+            // Should call the OCAPI
+            expect(getObjectAttributesOCAPICallStub.calledOnce).to.be.true;
+            expect(getSingleAttributeOCAPICallStub.calledTwice).to.be.true;
         });
 
         it('Should include system attributes when the option is enabled', async () => {
@@ -252,6 +263,11 @@ describe('attribute-get', () => {
             expect(outputSuccessSpy.getCall(3).args[0]).to.contain('object2/attribute2');
 
             expect(outputCommandBookEndSpy.calledTwice).to.be.true;
+
+            // Should call the OCAPI
+            expect(getObjectTypesOCAPICallStub.calledOnce).to.be.true;
+            expect(getObjectAttributesOCAPICallStub.calledTwice).to.be.true;
+            expect(getSingleAttributeOCAPICallStub.callCount).to.equal(4);
         });
     });
 });
