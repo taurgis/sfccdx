@@ -37,15 +37,7 @@ const attributePush = proxyquire('../../../../lib/cli-api/attribute-push', {
 });
 
 describe('attribute-push', () => {
-    beforeEach(() => {
-        fileExistsStub.resetHistory();
-        writeFileSpy.resetHistory();
-        readFileSpy.resetHistory();
-        outputFieldsSpy.resetHistory();
-        outputSuccessSpy.resetHistory();
-        outputErrorSpy.resetHistory();
-        outputCommandBookEndSpy.resetHistory();
-
+    before(() => {
         getSingleAttributeOCAPICallStub = sinon.stub(SystemObjectDefinition.prototype, 'getSingleObjectAttributeDefinition').resolves({
             isSuccess: () => true,
             data: {
@@ -62,8 +54,17 @@ describe('attribute-push', () => {
         });
     });
 
-    afterEach(() => {
-        sinon.restore();
+    beforeEach(() => {
+        fileExistsStub.resetHistory();
+        writeFileSpy.resetHistory();
+        readFileSpy.resetHistory();
+        outputFieldsSpy.resetHistory();
+        outputSuccessSpy.resetHistory();
+        outputErrorSpy.resetHistory();
+        outputCommandBookEndSpy.resetHistory();
+        getSingleAttributeOCAPICallStub.resetHistory();
+        updateSingleAttributeOCAPICallStub.resetHistory();
+        createSingleAttributeOCAPICallStub.resetHistory();
     });
 
     it('should push an an attribute when an object and attribute are passed', async () => {
