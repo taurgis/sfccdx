@@ -150,4 +150,93 @@ describe('attribute-push', () => {
         expect(updateSingleAttributeOCAPICallStub.notCalled).to.be.true;
         expect(createSingleAttributeOCAPICallStub.calledOnce).to.be.true;
     });
+
+    it('should attempt to create the attribute if the fetch fails', async () => {
+        fileExistsStub.returns(true);
+
+        getSingleAttributeOCAPICallStub.resolves({
+            isSuccess: () => false,
+            getFaultMessage: () => 'fault message'
+        });
+
+        await attributePush({
+            object: 'object',
+            attribute: 'attribute'
+        });
+
+        expect(outputFieldsSpy.called).to.be.false;
+        expect(outputSuccessSpy.calledOnce).to.be.true;
+        expect(outputErrorSpy.called).to.be.false;
+        expect(outputCommandBookEndSpy.calledTwice).to.be.true;
+        expect(readFileSpy.called).to.be.true;
+        expect(writeFileSpy.called).to.be.false;
+
+        // OCAPI Calls
+        expect(getSingleAttributeOCAPICallStub.calledOnce).to.be.true;
+        expect(updateSingleAttributeOCAPICallStub.called).to.be.false;
+        expect(createSingleAttributeOCAPICallStub.calledOnce).to.be.true;
+    });
+
+    it('should return an error when updating the attribute fails', async () => {
+        fileExistsStub.returns(true);
+
+        getSingleAttributeOCAPICallStub.resolves({
+            isSuccess: () => true,
+            data: {
+                _resource_state: 'STATE_ID'
+            }
+        });
+
+        updateSingleAttributeOCAPICallStub.resolves({
+            isSuccess: () => false,
+            getFaultMessage: () => 'fault message'
+        });
+
+        await attributePush({
+            object: 'object',
+            attribute: 'attribute'
+        });
+
+        expect(outputFieldsSpy.called).to.be.false;
+        expect(outputSuccessSpy.called).to.be.false;
+        expect(outputErrorSpy.calledOnce).to.be.true;
+        expect(outputCommandBookEndSpy.calledTwice).to.be.true;
+        expect(readFileSpy.called).to.be.true;
+        expect(writeFileSpy.called).to.be.false;
+
+        // OCAPI Calls
+        expect(getSingleAttributeOCAPICallStub.calledOnce).to.be.true;
+        expect(updateSingleAttributeOCAPICallStub.calledOnce).to.be.true;
+        expect(createSingleAttributeOCAPICallStub.notCalled).to.be.true;
+    });
+
+    it('should return an error when creating the attribute fails', async () => {
+        fileExistsStub.returns(true);
+
+        getSingleAttributeOCAPICallStub.resolves({
+            isSuccess: () => false
+        });
+
+        createSingleAttributeOCAPICallStub.resolves({
+            isSuccess: () => false,
+            getFaultMessage: () => 'fault message'
+        });
+
+        await attributePush({
+            object: 'object',
+            attribute: 'attribute'
+        });
+
+        expect(outputFieldsSpy.called).to.be.false;
+        expect(outputSuccessSpy.called).to.be.false;
+        expect(outputErrorSpy.calledOnce).to.be.true;
+        expect(outputCommandBookEndSpy.calledTwice).to.be.true;
+        expect(readFileSpy.called).to.be.true;
+        expect(writeFileSpy.called).to.be.false;
+
+        // OCAPI Calls
+        expect(getSingleAttributeOCAPICallStub.calledOnce).to.be.true;
+        expect(updateSingleAttributeOCAPICallStub.called).to.be.false;
+        expect(createSingleAttributeOCAPICallStub.calledOnce).to.be.true;
+    });
 });
